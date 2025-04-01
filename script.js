@@ -1,4 +1,107 @@
 
+// Hero animation
+document.addEventListener('DOMContentLoaded', () => {
+    // Function to check if window width is above 480px
+    const isDesktop = () => window.innerWidth > 480;
+
+    // Function to setup mobile state (no animations)
+    const setupMobileState = () => {
+        const elements = [
+            '[data-hero-animation="element"]',
+            ...[1, 2, 3, 4, 5, 6].map(i => `[data-hero-animation="element-${i}"]`),
+            '[data-hero-animation="vid-overlay"]'
+        ];
+
+        // Reset all elements to their visible state
+        elements.forEach(selector => {
+            gsap.set(selector, {
+                clearProps: "all" // Clear all GSAP-added properties
+            });
+        });
+
+        // Ensure vid-overlay is displayed properly on mobile
+        gsap.set('[data-hero-animation="vid-overlay"]', {
+            display: 'flex',
+            opacity: 1
+        });
+    };
+
+    // Function to run desktop animations
+    const runDesktopAnimation = () => {
+        const tl = gsap.timeline({
+            defaults: {
+                ease: "circ.out",
+                duration: 0.5
+            },
+        });
+
+        // First hide the vid-overlay
+        gsap.set('[data-hero-animation="vid-overlay"]', {
+            display: 'none',
+            opacity: 0
+        });
+
+        // Animate base element
+        tl.to('[data-hero-animation="element"]', {
+            opacity: 1,
+            y: 0
+        });
+
+        // Animate numbered elements in sequence
+        for(let i = 1; i <= 6; i++) {
+            tl.to(`[data-hero-animation="element-${i}"]`, {
+                opacity: 1,
+                y: 0
+            }, '-=0.4');
+        }
+
+        // Add the vid-overlay animation at the end
+        tl.to('[data-hero-animation="vid-overlay"]', {
+            display: 'flex',
+            opacity: 1,
+            duration: 0.5,
+            ease: "power2.inOut",
+            delay: 2
+        });
+
+        return tl;
+    };
+
+    // Initial setup based on screen size
+    let currentAnimation;
+    if (isDesktop()) {
+        currentAnimation = runDesktopAnimation();
+    } else {
+        setupMobileState();
+    }
+
+    // Handle resize events
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        // Debounce resize events
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            if (isDesktop()) {
+                if (!currentAnimation) {
+                    currentAnimation = runDesktopAnimation();
+                }
+            } else {
+                if (currentAnimation) {
+                    currentAnimation.kill(); // Stop any running animations
+                    currentAnimation = null;
+                    setupMobileState();
+                }
+            }
+        }, 250); // Wait 250ms after resize ends before running
+    });
+});
+
+
+
+// -------------------------------------------------------------- //
+
+
+
 // Hero Lottie Video Setup
 document.addEventListener('DOMContentLoaded', () => {
   const vimeoIframe = document.querySelector('#vimeo-vid');
