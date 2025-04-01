@@ -40,9 +40,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const locale = document.documentElement.getAttribute('data-wf-locale');
         let videoUrl;
 
-        if (locale === 'en-US') {
-            videoUrl = 'https://player.vimeo.com/video/1045680299?h=fb38550f3e&badge=0&autopause=0&player_id=0&app_id=58479';
-        } else if (locale === 'en-GB') {
+        // if (locale === 'en-US') {
+        //     videoUrl = 'https://player.vimeo.com/video/1045680299?h=fb38550f3e&badge=0&autopause=0&player_id=0&app_id=58479';
+        // } else if (locale === 'en-GB') {
+        //     videoUrl = 'https://player.vimeo.com/video/1045679785?h=d1f2dad1b9&badge=0&autopause=0&player_id=0&app_id=58479';
+        // }
+
+  if (locale === 'en-GB') {
             videoUrl = 'https://player.vimeo.com/video/1045679785?h=d1f2dad1b9&badge=0&autopause=0&player_id=0&app_id=58479';
         }
 
